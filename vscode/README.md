@@ -27,6 +27,20 @@ Five slash commands, namespaced so they do not collide with anything else you ha
 
 Skills trigger from their description; commands are explicit. Both are declarative contributions, so the extension contains no code and has no activation cost.
 
+## Using it
+
+Plain language is the normal path: the skills activate when your request matches their description, so "review the diff against main before I push" pulls in `diff-review`, and "why is CI red?" pulls in `ci-triage`. Use the commands when you want the whole checklist rather than a partial answer.
+
+```
+/repo-flow:commit-check    audit staged changes, draft the message, stop before committing
+/repo-flow:branch-hygiene  list deletable branches with the evidence for each
+/repo-flow:pr-ready        score readiness, draft the PR title and body from the diff
+/repo-flow:review-diff     line-level findings with triggers and the smallest fix
+/repo-flow:ci-triage       failing step, first error line, classification, proposed fix
+```
+
+Repo Flow never commits, pushes, opens a pull request, deletes a branch, rewrites shared history, or bypasses a hook without you approving that specific step. Reviews stay quiet on style a linter would catch, and no skill claims a check passed that it did not run.
+
 ## Installing
 
 From the built VSIX:

@@ -1,6 +1,42 @@
 # Repo Flow
 
-A Qoder plugin that codifies the everyday repository workflow: commits that stay coherent, branches that do not outlive their purpose, diffs reviewed for real defects, and red pipelines narrowed to a cause.
+**Repo Flow** is a repository-workflow toolkit for coding agents. It keeps commits coherent, branches short-lived, diffs reviewed for real defects, and red pipelines narrowed to a cause. The same four skills ship to four surfaces: a Qoder plugin, a VS Code extension, an Antigravity plugin, and a plain `.agents/skills/` folder.
+
+## Using Repo Flow
+
+You rarely need to type a command. Repo Flow works by matching your request against the four skills, so plain language is the normal path:
+
+| You say | Skill that answers |
+| --- | --- |
+| "stage these and write a commit message" | `commit-hygiene` |
+| "is my commit good? split this if needed" | `commit-hygiene` |
+| "new branch for the retry bug" | `branch-pr-lifecycle` |
+| "which branches can I delete?" | `branch-pr-lifecycle` |
+| "review the diff against main" | `diff-review` |
+| "why is CI red?" | `ci-triage` |
+
+The explicit commands exist for the moments you want the full checklist rather than a partial answer:
+
+| Command | What it does |
+| --- | --- |
+| `commit-check` | Reads `git diff --cached`, flags unrelated or uncommittable files, drafts a message in the repo's own style, prints the `git commit` command — and stops there |
+| `branch-hygiene` | Fetches, resolves the default branch, then sorts every local branch into safe-to-delete / needs-confirmation / keep with the evidence, including squash-merged work that `git branch --merged` misses |
+| `pr-ready` | Scores scope, diff size, tests, and whether the branch is current; drafts a title under 70 characters and a body whose Verification section lists only commands actually run |
+| `review-diff` | Reviews a range for correctness, security, data integrity, broken contracts, and missing tests. Findings carry `file:line`, the triggering input, and the smallest fix |
+| `ci-triage` | Pulls the failing step, quotes the first error rather than the wrapper, classifies behind-base / environment / flaky / dependency / regression with evidence, then proposes the smallest fix |
+
+Invocation differs per surface, because each tool names things its own way:
+
+| Surface | Skills | Commands |
+| --- | --- | --- |
+| Qoder | automatic | `/repo-flow:commit-check`, `:branch-hygiene`, `:pr-ready`, `:review-diff`, `:ci-triage` |
+| VS Code | automatic, or ask for one by name | `/repo-flow:commit-check` and the rest — the exact rendering is inferred from Copilot's own namespacing, not observed |
+| Antigravity | `/commit-hygiene`, `/diff-review`, `/ci-triage`, `/branch-pr-lifecycle` | no separate command files; the skills are the entry points |
+
+A first day with it: `commit-check` before anything lands, `review-diff` on the range you are about to push, `pr-ready` when the branch is done, `ci-triage` the moment a check goes red.
+
+**What Repo Flow will not do.** It does not commit, push, open a pull request, delete a branch, rewrite shared history, or bypass a hook without you approving that specific step. It does not report style a linter would catch, or naming taste, in a review. It will not claim a check passed that it did not run, and when a diff or a log is out of reach it says so instead of guessing — the skills are written to state uncovered paths explicitly rather than imply full coverage.
+
 
 ## What it ships
 
@@ -130,7 +166,7 @@ Four surfaces, one workflow: Qoder plugin (this directory), VS Code extension (`
 
 Three skill trees, deliberately: `skills/` is the Qoder original with subagent delegation, `vscode/skills/` is the adapted port with no subagent, and `.agents/skills/` is byte-identical to the adapted port so one folder serves both Antigravity and a VS Code workspace. The validator asserts those relationships instead of trusting them.
 
-## Using it in Antigravity and other agents
+## Repo Flow in Antigravity, VS Code, and Claude-compatible tools
 
 Antigravity loads customizations from a **customization root**: `.agents/` in a project, or `~/.gemini/config/` globally. Skills belong in `<root>/skills/<name>/SKILL.md` — so the `.agents/skills/` folder here is already in the documented shape — and plugins belong in `<root>/plugins/<name>/` with a `plugin.json`, optionally registered by a `plugins.json` in that root. Frontmatter needs `name` and `description`, which every file here already carries, and a loaded skill is invocable as `/skill-name` as well as activated from its description.
 

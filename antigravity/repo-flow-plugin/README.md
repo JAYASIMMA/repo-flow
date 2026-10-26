@@ -16,6 +16,21 @@ repo-flow-plugin/
     └── ci-triage/SKILL.md
 ```
 
+## Using it
+
+Antigravity activates a skill when your request matches its `description`, and you can also invoke one directly by name:
+
+```
+/commit-hygiene        stage these changes and write the commit message
+/branch-pr-lifecycle   which local branches are safe to delete?
+/diff-review           review the diff against main
+/ci-triage             why is this check failing?
+```
+
+The everyday pattern is to say what you want in plain language — "review the diff against main before I push" — and let the agent pull in `diff-review`. Plugin skills may be namespaced by Antigravity if a name collides with another customization.
+
+Repo Flow does not commit, push, open a pull request, or delete a branch on its own. Destructive steps are always proposed with their evidence, for you to approve.
+
 ## Installing
 
 Antigravity loads customizations from **customization roots**: `.agents/` inside a project and `~/.gemini/config/` globally. A plugin must sit under a `plugins/` folder inside one of those roots, and `plugins.json` in the root registers additional plugin directories. The layout here already satisfies that: `plugin.json` plus a `skills/` folder of `<skill>/SKILL.md` directories.
