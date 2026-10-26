@@ -1,0 +1,29 @@
+{
+  "name": "repo-flow-plugin",
+  "displayName": "Repo Flow",
+  "version": "0.1.0",
+  "description": "Commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage for coding agents.",
+  "logo": "assets/logo.png",
+  "author": {
+    "name": "Jayasimma",
+    "email": "137266557+JAYASIMMA@users.noreply.github.com"
+  },
+  "repository": "https://github.com/JAYASIMMA/repo-flow",
+  "license": "MIT",
+  "keywords": [
+    "git",
+    "github",
+    "code-review",
+    "pull-request",
+    "commit",
+    "ci",
+    "agent-skills",
+    "workflow"
+  ],
+  "suggestedPrompts": [
+    "Check my staged changes before I commit",
+    "Review the diff against main and flag real bugs",
+    "Why did CI fail on this branch?",
+    "Which local branches are safe to delete?"
+  ]
+}

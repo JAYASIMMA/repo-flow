@@ -1,0 +1,81 @@
+name: Publish VS Code extension
+
+# Releases the extension on every version tag. The tag must match
+# vscode/package.json "version"; the guard step fails the run otherwise so a
+# release can never point at a different build than the tag advertises.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the tag matches package.json version
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME#v}"
+          ver="$(node -p "require('./vscode/package.json').version")"
+          if [ "$tag" != "$ver" ]; then
+            echo "::error::tag v$tag does not match vscode/package.json version $ver"
+            exit 1
+          fi
+          echo "Publishing repo-flow $ver"
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Package
+        working-directory: vscode
+        run: vsce package -o ../repo-flow-${GITHUB_REF_NAME#v}.vsix
+
+      - name: Show package contents
+        run: unzip -l "repo-flow-${GITHUB_REF_NAME#v}.vsix"
+
+      # Requires a repository secret named VSCE_PAT.
+      #
+      # The secret is an Azure DevOps personal access token whose Marketplace
+      # scope is "Manage", and whose organisation owns the publisher id set in
+      # vscode/package.json. The `secrets` context is not available in a
+      # step-level `if`, so the presence check happens in the shell instead and
+      # the step no-ops when the secret is missing: the VSIX still ships as a
+      # GitHub release asset, which is a working install channel on its own.
+      #
+      # Azure DevOps global PATs retire on 1 December 2026. When they do, swap
+      # this step for an OIDC login to a service principal federated with a
+      # GitHub environment, and delete VSCE_PAT.
+      - name: Publish to the Marketplace
+        working-directory: vscode
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VSCE_PAT:-}" ]; then
+            echo "::notice::VSCE_PAT is not set; skipping Marketplace publish. The VSIX is still released on GitHub."
+            exit 0
+          fi
+          vsce publish -p "$VSCE_PAT"
+
+      - name: Attach the VSIX to a GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          vsix="repo-flow-${GITHUB_REF_NAME#v}.vsix"
+          gh release create "$GITHUB_REF_NAME" "$vsix" \
+            --title "repo-flow $GITHUB_REF_NAME" \
+            --generate-notes || {
+              echo "Release $GITHUB_REF_NAME already exists; uploading asset instead"
+              gh release upload "$GITHUB_REF_NAME" "$vsix" --clobber
+            }

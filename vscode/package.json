@@ -5,6 +5,7 @@
   "description": "Agent Skills and slash commands for commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage.",
   "version": "0.1.0",
   "license": "MIT",
+  "icon": "./media/icon.png",
   "engines": {
     "vscode": "^1.143.0"
   },

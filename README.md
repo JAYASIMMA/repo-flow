@@ -118,10 +118,41 @@ repo-flow/
 ├── .claude-plugin/marketplace.json marketplace entry (Claude-compatible location, identical content)
 ├── .mcp.json                       GitHub remote MCP connector
 ├── assets/avatar.svg               logo, composer icon
-├── skills/<name>/SKILL.md          plus skills/diff-review/references/review-checklist.md
-├── commands/<name>.md              five slash commands
-└── agents/diff-reviewer.md         reviewer subagent
+├── skills/<name>/SKILL.md          Qoder skills; diff-review here keeps its subagent
+├── commands/<name>.md              five Qoder slash commands
+├── agents/diff-reviewer.md         reviewer subagent (Qoder only)
+├── .agents/skills/<name>/SKILL.md  portable copy for Antigravity and VS Code workspaces
+├── antigravity/repo-flow-plugin/   Antigravity plugin: plugin.json, assets/logo.png, skills/
+└── vscode/                         VS Code extension: package.json, skills/, prompts/, media/icon.png
 ```
+
+Four surfaces, one workflow: Qoder plugin (this directory), VS Code extension (`vscode/`), Antigravity plugin (`antigravity/repo-flow-plugin/`), and a tool-neutral workspace folder (`.agents/skills/`).
+
+Three skill trees, deliberately: `skills/` is the Qoder original with subagent delegation, `vscode/skills/` is the adapted port with no subagent, and `.agents/skills/` is byte-identical to the adapted port so one folder serves both Antigravity and a VS Code workspace. The validator asserts those relationships instead of trusting them.
+
+## Using it in Antigravity and other agents
+
+Antigravity discovers skills in `<workspace>/.agents/skills/<name>/SKILL.md` and globally in `~/.gemini/config/skills/<name>/SKILL.md`. Frontmatter needs `name` and `description`, which every file here already carries, and a loaded skill is invocable as `/skill-name` as well as picked up autonomously.
+
+Workspace-scoped, from any project:
+
+```bash
+mkdir -p .agents/skills
+cp -r <this-repo>/.agents/skills/. .agents/skills/
+```
+
+Global, so every workspace sees them:
+
+```bash
+mkdir -p ~/.gemini/config/skills
+cp -r <this-repo>/.agents/skills/. ~/.gemini/config/skills/
+```
+
+The five Qoder commands have no Antigravity equivalent and do not need one: the skills themselves are slash-invocable there. Rules files (`AGENTS.md`, `GEMINI.md`, or `.agents/rules/*.md`) are a separate mechanism and are deliberately not shipped here, so this plugin does not silently rewrite a project's own agent rules.
+
+`.agents/skills/` is also read by VS Code, and `.github/skills/` and `.claude/skills/` are recognized too — so the same folder works across those tools without the extension. Use the `vscode/` extension when you want the skills available in *every* workspace instead of per-repo.
+
+One collision to avoid: skill names must be unique per VS Code session. If you open *this* repository in VS Code with the extension also installed, `commit-hygiene` arrives twice — once from the extension, once from the workspace. Pick one surface per project; the extension for everyday work, the folder for repo-local overrides.
 
 ## Publishing to the marketplace
 
@@ -135,6 +166,8 @@ The git repository, `owner.email`, the mirrored `repository` and `homepage` fiel
 ## Also in this repository
 
 `vscode/` holds a companion VS Code extension that ships the same workflow to GitHub Copilot as Agent Skills and `.prompt.md` slash commands, packaged to `repo-flow-0.1.0.vsix` by `vsce`. See [vscode/README.md](vscode/README.md) for what it changes and why — notably that `diff-review` there has no subagent to delegate to, and the GitHub MCP connector is intentionally left out because VS Code already contributes one.
+
+`antigravity/repo-flow-plugin/` holds the Google Antigravity packaging: a `plugin.json` in the shape their installed plugins use, the same 256px logo, and the four skills. No command files — Antigravity invokes skills as `/skill-name`. See [antigravity/repo-flow-plugin/README.md](antigravity/repo-flow-plugin/README.md).
 
 ## Design rules these skills follow
 

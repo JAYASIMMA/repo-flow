@@ -2,6 +2,7 @@
 .vscode-test/**
 node_modules/**
 .gitignore
+media/*.ps1
 **/*.map
 **/*.ts
 tsconfig.json
