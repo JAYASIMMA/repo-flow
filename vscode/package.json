@@ -1,0 +1,66 @@
+{
+  "name": "repo-flow",
+  "publisher": "jayasimma",
+  "displayName": "Repo Flow",
+  "description": "Agent Skills and slash commands for commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.143.0"
+  },
+  "categories": [
+    "AI",
+    "Chat"
+  ],
+  "keywords": [
+    "git",
+    "github",
+    "code-review",
+    "pull-request",
+    "commit",
+    "ci",
+    "agent-skills",
+    "copilot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JAYASIMMA/repo-flow.git"
+  },
+  "homepage": "https://github.com/JAYASIMMA/repo-flow",
+  "bugs": {
+    "url": "https://github.com/JAYASIMMA/repo-flow/issues"
+  },
+  "contributes": {
+    "chatSkills": [
+      {
+        "path": "./skills/commit-hygiene/SKILL.md"
+      },
+      {
+        "path": "./skills/branch-pr-lifecycle/SKILL.md"
+      },
+      {
+        "path": "./skills/diff-review/SKILL.md"
+      },
+      {
+        "path": "./skills/ci-triage/SKILL.md"
+      }
+    ],
+    "chatPromptFiles": [
+      {
+        "path": "./prompts/commit-check.prompt.md"
+      },
+      {
+        "path": "./prompts/branch-hygiene.prompt.md"
+      },
+      {
+        "path": "./prompts/pr-ready.prompt.md"
+      },
+      {
+        "path": "./prompts/review-diff.prompt.md"
+      },
+      {
+        "path": "./prompts/ci-triage.prompt.md"
+      }
+    ]
+  }
+}

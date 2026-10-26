@@ -132,6 +132,10 @@ The git repository, `owner.email`, the mirrored `repository` and `homepage` fiel
 
 `category`, `tags`, `descriptionZh`, `brandColor`, and `defaultPrompt` are already filled to match the shape of existing marketplace plugins.
 
+## Also in this repository
+
+`vscode/` holds a companion VS Code extension that ships the same workflow to GitHub Copilot as Agent Skills and `.prompt.md` slash commands, packaged to `repo-flow-0.1.0.vsix` by `vsce`. See [vscode/README.md](vscode/README.md) for what it changes and why — notably that `diff-review` there has no subagent to delegate to, and the GitHub MCP connector is intentionally left out because VS Code already contributes one.
+
 ## Design rules these skills follow
 
 Every finding, message, and command output must be anchored to something the tool actually read. Commands that destroy work — branch deletes, force pushes, history rewrites — are always proposed, never run silently. A review that returns nothing is a valid result, so the skills bias toward suppressing preference-based comments. And nothing claims a check passed that was not run.
