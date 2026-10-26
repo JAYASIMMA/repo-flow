@@ -1,0 +1,17 @@
+{
+  "name": "jayasimma-plugins",
+  "version": "0.1.0",
+  "description": "Repository workflow plugins for Qoder: commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage.",
+  "repository": "https://github.com/JAYASIMMA/repo-flow",
+  "owner": {
+    "name": "Jayasimma",
+    "email": "137266557+JAYASIMMA@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "repo-flow",
+      "source": "./",
+      "description": "Codify the repository workflow: commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage, with a GitHub MCP connector for pull requests and check logs."
+    }
+  ]
+}

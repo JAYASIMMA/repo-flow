@@ -1,0 +1,81 @@
+{
+  "name": "repo-flow",
+  "displayName": "Repo Flow",
+  "version": "0.1.0",
+  "description": "Codify the repository workflow: commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage, with a GitHub MCP connector for pull requests and check logs.",
+  "descriptionZh": "将仓库工作流标准化：提交规范、分支与 Pull Request 生命周期、基于证据的 diff 评审，以及 CI 失败定位；内置 GitHub MCP 连接器用于读取 PR 与检查日志。",
+  "author": {
+    "name": "Jayasimma",
+    "url": "https://github.com/JAYASIMMA"
+  },
+  "homepage": "https://github.com/JAYASIMMA/repo-flow",
+  "repository": "https://github.com/JAYASIMMA/repo-flow",
+  "license": "MIT",
+  "category": "Coding",
+  "keywords": [
+    "qoder-plugin",
+    "git",
+    "github",
+    "commit",
+    "pull-request",
+    "code-review",
+    "ci",
+    "workflow"
+  ],
+  "tags": [
+    "git",
+    "code-review",
+    "workflow",
+    "ci"
+  ],
+  "logo": "./assets/avatar.svg",
+  "skills": "./skills/",
+  "agents": [
+    "./agents/diff-reviewer.md"
+  ],
+  "commands": {
+    "commit-check": {
+      "source": "./commands/commit-check.md",
+      "description": "Audit staged changes and shape a well-formed commit before committing."
+    },
+    "branch-hygiene": {
+      "source": "./commands/branch-hygiene.md",
+      "description": "Report stale branches, merged work, and branch drift across local and remote."
+    },
+    "pr-ready": {
+      "source": "./commands/pr-ready.md",
+      "description": "Check a branch against PR readiness: scope, tests, description, and reviewability."
+    },
+    "review-diff": {
+      "source": "./commands/review-diff.md",
+      "description": "Run the diff-reviewer subagent over a diff and report line-level findings."
+    },
+    "ci-triage": {
+      "source": "./commands/ci-triage.md",
+      "description": "Read failing CI output and localise the break to a commit, job, or test."
+    }
+  },
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Repo Flow",
+    "shortDescription": "Commit, branch, review, and CI triage workflows for Git repos",
+    "longDescription": "Use Repo Flow to keep a repository tidy while working. It shapes commits that match the project's convention, audits branch and pull request state, reviews diffs for real bugs and convention drift with a dedicated reviewer subagent, and turns failing CI output into a specific commit, job, or test to fix. The GitHub MCP connector supplies pull request detail and check-run logs when local git history is not enough.",
+    "developerName": "Jayasimma",
+    "category": "coding",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Check my staged changes before I commit",
+      "Review the diff against main and flag real bugs",
+      "Why did CI fail on this branch?",
+      "Which local branches are safe to delete?"
+    ],
+    "brandColor": "#0F766E",
+    "composerIcon": "./assets/avatar.svg",
+    "logo": "./assets/avatar.svg",
+    "screenshots": []
+  }
+}
