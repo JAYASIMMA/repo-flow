@@ -1,6 +1,6 @@
 {
   "name": "repo-flow",
-  "publisher": "jayasimma",
+  "publisher": "JAYASIMMA",
   "displayName": "Repo Flow",
   "description": "Agent Skills and slash commands for commit hygiene, branch and pull request lifecycle, evidence-backed diff review, and CI triage.",
   "version": "0.1.0",

@@ -18,15 +18,33 @@ repo-flow-plugin/
 
 ## Installing
 
-Antigravity keeps plugins under `~/.gemini/config/plugins/`, alongside its skill locations at `~/.gemini/config/skills/` and `<workspace>/.agents/skills/`. Installing the gallery copy of this plugin is the supported route when it is listed. To place it by hand:
+Antigravity loads customizations from **customization roots**: `.agents/` inside a project and `~/.gemini/config/` globally. A plugin must sit under a `plugins/` folder inside one of those roots, and `plugins.json` in the root registers additional plugin directories. The layout here already satisfies that: `plugin.json` plus a `skills/` folder of `<skill>/SKILL.md` directories.
 
-```bash
-cp -r repo-flow-plugin ~/.gemini/config/plugins/
+Use the script one level up, which copies the plugin into the global root and registers it:
+
+```powershell
+.\install-antigravity.ps1              # install
+.\install-antigravity.ps1 -Uninstall   # roll back
 ```
 
-Restart Antigravity afterwards. Whether a hand-copied folder is loaded without an entry in `~/.gemini/config/config.json` has not been tested — every plugin observed on the machine used during development carried an `installedFrom` record naming the `antigravity-plugins-official` marketplace, so the gallery install is the reliable path and the manual copy is a convenience.
+It writes `~/.gemini/config/plugins.json` as:
 
-If you would rather not install anything globally, the same four skills work at workspace scope:
+```json
+{ "entries": [ { "path": "~/.gemini/config/plugins", "include_only": ["^repo-flow-plugin$"] } ] }
+```
+
+Three deliberate choices there. The path names the folder **containing** plugins, because `include_only` matches directory names — pointing it at the plugin folder itself would scan one level too deep. `include_only` is scoped so the gallery plugins already in that folder are not re-registered. And `plugins.json` is the documented user-facing file; `~/.gemini/config/config.json` belongs to the app and records gallery installs as `installedFrom`, so the script does not touch it. Output is written without a UTF-8 BOM, which PowerShell's `Set-Content -Encoding utf8` would otherwise add and which breaks strict JSON parsers.
+
+Restart Antigravity after installing. Uninstall keeps a timestamped copy of the folder out of caution — delete it yourself afterwards, since leaving it inside a `plugins/` root is litter.
+
+Workspace scope instead, with no global change:
+
+```bash
+mkdir -p .agents/plugins
+cp -r repo-flow-plugin .agents/plugins/
+```
+
+Or just skills, no plugin wrapper at all — this repo's own `.agents/skills/` is auto-discovered when you open it in Antigravity:
 
 ```bash
 mkdir -p .agents/skills

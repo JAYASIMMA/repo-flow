@@ -132,20 +132,20 @@ Three skill trees, deliberately: `skills/` is the Qoder original with subagent d
 
 ## Using it in Antigravity and other agents
 
-Antigravity discovers skills in `<workspace>/.agents/skills/<name>/SKILL.md` and globally in `~/.gemini/config/skills/<name>/SKILL.md`. Frontmatter needs `name` and `description`, which every file here already carries, and a loaded skill is invocable as `/skill-name` as well as picked up autonomously.
+Antigravity loads customizations from a **customization root**: `.agents/` in a project, or `~/.gemini/config/` globally. Skills belong in `<root>/skills/<name>/SKILL.md` — so the `.agents/skills/` folder here is already in the documented shape — and plugins belong in `<root>/plugins/<name>/` with a `plugin.json`, optionally registered by a `plugins.json` in that root. Frontmatter needs `name` and `description`, which every file here already carries, and a loaded skill is invocable as `/skill-name` as well as activated from its description.
 
-Workspace-scoped, from any project:
+Install the plugin globally on this machine:
+
+```powershell
+antigravity\install-antigravity.ps1            # copy into the root + register
+antigravity\install-antigravity.ps1 -Uninstall # roll back
+```
+
+Workspace-scoped instead, with no global change:
 
 ```bash
 mkdir -p .agents/skills
 cp -r <this-repo>/.agents/skills/. .agents/skills/
-```
-
-Global, so every workspace sees them:
-
-```bash
-mkdir -p ~/.gemini/config/skills
-cp -r <this-repo>/.agents/skills/. ~/.gemini/config/skills/
 ```
 
 The five Qoder commands have no Antigravity equivalent and do not need one: the skills themselves are slash-invocable there. Rules files (`AGENTS.md`, `GEMINI.md`, or `.agents/rules/*.md`) are a separate mechanism and are deliberately not shipped here, so this plugin does not silently rewrite a project's own agent rules.
